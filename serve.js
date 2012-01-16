@@ -6,7 +6,8 @@ http.createServer(function (request, response) {
  
     console.log("request %s", request.url);
      
-    var filePath = '.' + request.url;
+    var filePath = '.' + require('url').parse(request.url, true).pathname;
+//    var filePath = '.' + url.parse(request.url);
     if (filePath == './')
         filePath = './index.html';
          
