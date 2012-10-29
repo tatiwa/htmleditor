@@ -44,12 +44,14 @@ http.createServer(function (request, response) {
                         var text = encoder.htmlEncode(
                             cheerio.load(fs.readFileSync(requestparse.query.file, "utf8"))("body").html()
                         );
+                        word("form")[0].attribs.action += '?file=' + requestparse.query.file;
+                        console.log(word("form")[0].attribs.action);
                         console.log(text);    
                         word("textarea").replaceWith(
                         	'<textarea id="elm1" name="elm1" rows="15" cols="80" style="width: 100%">' +
                         	text + '</textarea>'
                         );
-                        console.log(word("html").html());
+                        // console.log(word("html").html());
                         response.writeHead(200, 'Content-Type: text/html' );
                         response.end(word("html").html(), "utf8");
                             
