@@ -15,7 +15,7 @@ http.createServer(function (request, response) {
 
     if (filePath == './word.html') {
         var encoder = new Encoder('entity');
-        var word = cheerio.load(fs.readFileSync("tinymce/word.html", "utf8"));
+        var word = cheerio.load(fs.readFileSync("nodescripts/word.html", "utf8"));
         var targetFile = requestparse.query.file;
         // Form action change
         word("form")[0].attribs.action += '?file=' + targetFile;
