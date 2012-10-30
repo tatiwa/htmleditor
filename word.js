@@ -30,8 +30,8 @@ http.createServer(function (request, response) {
                 console.log('POST');    
                 var POST =  qs.parse(body);
                 console.log(POST);    
-                var htmlText = cheerio.load(qs.parse(body).elm1);
-                console.log(htmlText.html());
+                var htmlText = POST.elm1;
+                console.log(htmlText);
 
                 fs.exists(targetFile, function(exists) {
                     if (exists) {
@@ -39,19 +39,14 @@ http.createServer(function (request, response) {
                         var filetext = cheerio.load(fs.readFileSync(targetFile, "utf8"));
 
                         // Replace body and save file
-                        filetext("title").replaceWith('<title>' + htmlText("title").html() + '</textarea>');
-                        filetext("body").replaceWith('<body>\n' + htmlText("body").html() + '\n</body>');
+                        filetext("body").replaceWith('<body>\n' + htmlText + '\n</body>');
                         console.log(filetext.html());
                         fs.writeFileSync(targetFile, filetext.html(), "utf8");
 
-                        // Modiy browser window
-                        word("title").replaceWith(
-                        	'<title>' + htmlText("title").html() + '</textarea>'
-                        );
-                        var text = encoder.htmlEncode(htmlText("body").html());
+                        // Modify browser window
                         word("textarea").replaceWith(
                         	'<textarea id="elm1" name="elm1" rows="15" cols="80" style="width: 100%">' +
-                        	text + '</textarea>'
+                        	htmlText + '</textarea>'
                         );
                     } 
                     response.writeHead(200, 'Content-Type: text/html' );
