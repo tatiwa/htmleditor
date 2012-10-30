@@ -15,50 +15,72 @@ http.createServer(function (request, response) {
 
     if (filePath == './word.html') {
         var encoder = new Encoder('entity');
-        var htmlSourcePre = fs.readFileSync("tinymce/word_pre.html", "utf8");
-        var htmlSourcePost = fs.readFileSync("tinymce/word_post.html", "utf8");
-        $ = cheerio.load(fs.readFileSync("tinymce/word.html", "utf8"));
-        //console.log($("html").html());
+        var word = cheerio.load(fs.readFileSync("tinymce/word.html", "utf8"));
+        var targetFile = requestparse.query.file;
+        // Form action change
+        word("form")[0].attribs.action += '?file=' + targetFile;
+        console.log(word("form")[0].attribs.action);
 
-        var htmlText;
         if(request.method=='POST') {
             var body='';
             request.on('data', function (data) {
                body +=data;
             });
             request.on('end',function(){
+                console.log('POST');    
                 var POST =  qs.parse(body);
-                htmlText = POST.elm1;
-                console.log(encoder.htmlEncode(htmlText));
-                response.writeHead(200, 'Content-Type: text/html' );
-                response.write(htmlSourcePre, "utf8");
-                response.write(encoder.htmlEncode(htmlText), "utf8");
-                response.end(htmlSourcePost, "utf8");
-            });
-        } else if(request.method=='GET') {
-            request.on('end',function(){
-                var word = cheerio.load(fs.readFileSync("tinymce/word.html", "utf8"));
-                console.log(requestparse.query.file);
-                fs.exists(requestparse.query.file, function(exists) {
+                console.log(POST);    
+                var htmlText = cheerio.load(qs.parse(body).elm1);
+                console.log(htmlText.html());
+
+                fs.exists(targetFile, function(exists) {
                     if (exists) {
-                        var text = encoder.htmlEncode(
-                            cheerio.load(fs.readFileSync(requestparse.query.file, "utf8"))("body").html()
+                        console.log(targetFile);    
+                        var filetext = cheerio.load(fs.readFileSync(targetFile, "utf8"));
+
+                        // Replace body and save file
+                        filetext("title").replaceWith('<title>' + htmlText("title").html() + '</textarea>');
+                        filetext("body").replaceWith('<body>\n' + htmlText("body").html() + '\n</body>');
+                        console.log(filetext.html());
+                        fs.writeFileSync(targetFile, filetext.html(), "utf8");
+
+                        // Modiy browser window
+                        word("title").replaceWith(
+                        	'<title>' + htmlText("title").html() + '</textarea>'
                         );
-                        word("form")[0].attribs.action += '?file=' + requestparse.query.file;
-                        console.log(word("form")[0].attribs.action);
-                        console.log(text);    
+                        var text = encoder.htmlEncode(htmlText("body").html());
                         word("textarea").replaceWith(
                         	'<textarea id="elm1" name="elm1" rows="15" cols="80" style="width: 100%">' +
                         	text + '</textarea>'
                         );
-                        // console.log(word("html").html());
-                        response.writeHead(200, 'Content-Type: text/html' );
-                        response.end(word("html").html(), "utf8");
-                            
-                    } else {
-                        response.writeHead(200, 'Content-Type: text/html' );
-                        response.end(word("html").html(), "utf8");
+                    } 
+                    response.writeHead(200, 'Content-Type: text/html' );
+                    response.end(word("html").html(), "utf8");
+        	    });
+        	});
+        } else if(request.method=='GET') {
+            request.on('end',function(){
+                console.log('GET');    
+                
+                fs.exists(targetFile, function(exists) {
+                    if (exists) {
+                        console.log("Targetfile: " + targetFile);
+                        var htmlText = cheerio.load(fs.readFileSync(targetFile, "utf8"));
+                        // console.log(htmlText.html());
+                        word("title").replaceWith(
+                        	'<title>' + htmlText("title").html() + '</textarea>'
+                        );
+                        var text = encoder.htmlEncode(htmlText("body").html());
+                        console.log(text);    
+                        // Textarea change
+                        word("textarea").replaceWith(
+                        	'<textarea id="elm1" name="elm1" rows="15" cols="80" style="width: 100%">' +
+                        	text + '</textarea>'
+                        );
                     }
+                    response.writeHead(200, 'Content-Type: text/html' );
+                    response.end(word("html").html(), "utf8");
+                    
         	    });
 
             });
