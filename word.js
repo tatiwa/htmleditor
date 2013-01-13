@@ -93,6 +93,12 @@ http.createServer(function (request, response) {
 	        case '.jpg':
 	            contentType = 'image/jpeg';
 	            break;
+	        case '.gif':
+	            contentType = 'image/gif';
+	            break;
+	        case '.ico':
+	            contentType = 'image/vnd.microsoft.icon';
+	            break;
 	        case '.dae':
 	            contentType = 'application/octet-stream';
 	            break;

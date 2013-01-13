@@ -7,9 +7,16 @@
 <script src="../nicEdit/nicEdit.js" type="text/javascript"></script>
 <script type="text/javascript">
      bkLib.onDomLoaded(function() {
-        var myNicEditor = new nicEditor({iconsPath: '../nicEdit/nicEditorIcons.gif'});
+        var myNicEditor = new nicEditor({
+            iconsPath: '../nicEdit/nicEditorIcons.gif', 
+            fullPanel : true, 
+            onSave : function(content, id, instance) {
+                alert('save button clicked for element '+id);
+                } 
+        });
         myNicEditor.setPanel('toolbar');
         myNicEditor.addInstance('elm1');
+        myNicEditor.instanceById('elm1').selected(0,0);
      });
 </script>
 <!-- /nicEdit -->
@@ -18,7 +25,6 @@
 <body style="width: 100%; margin:0; padding: 0; padding-top: 10px;" >
 <div id="toolbar" style="position: fixed; top: 0; left: 0; width: 100%;" >
 </div>
-
 <form method="post" action="./word.html" style="height: 100%>
 	<!-- Gets replaced with TinyMCE, remember HTML in a textarea should be encoded -->
 	<textarea id="elm1" name="elm1" rows="15" cols="80" style="width: 100%">
