@@ -1,10 +1,10 @@
 var http = require('http');
-var fs = require('fs');
+var fs = require('fs-extra');
 var path = require('path');
 var qs = require('querystring');
 var Encoder = require('node-html-encoder').Encoder;
 var cheerio = require("cheerio");
- 
+
 http.createServer(function (request, response) {
  
     console.log("request %s", request.url);
@@ -108,15 +108,23 @@ http.createServer(function (request, response) {
                 console.log('test.html GET');    
                 
                 fs.exists(targetFile, function(exists) {
-                    
                     if (!exists) {
-                        fs.createReadStream('htmleditor/empty.html').pipe(fs.createWriteStream(targetFile));
+                        fs.copy('htmleditor/empty.html', targetFile, function(err){
+                          if (err) {
+                            console.error(err);
+                          }
+                          else {
+                            console.log("success!")
+                            response.writeHead(200, 'Content-Type: text/html' );
+                            response.end(fs.readFileSync(targetFile, "utf8"), "utf8");
+                          }
+                        });
+                    } else {
+                        console.log("File exists: "+targetFile);
+                        response.writeHead(200, 'Content-Type: text/html' );
+                        response.end(fs.readFileSync(targetFile, "utf8"), "utf8");
+                        console.log(fs.readFileSync(targetFile, "utf8"));
                     }
-                    var filetext = cheerio.load(fs.readFileSync(targetFile, "utf8"));
-                    response.writeHead(200, 'Content-Type: text/html' );
-                    response.end(filetext("body"), "utf8");
-                    console.log(targetFile);
-                    console.log(filetext("body"));
                     
         	    });
 
