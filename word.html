@@ -8,21 +8,21 @@
 <script src="../nicEdit/nicEdit.js" type="text/javascript"></script>
 <script type="text/javascript">
      bkLib.onDomLoaded(function() {
-        var testurl = document.URL.replace("word.html", "test.html");
+        var updateurl = document.URL.replace("word.html", "update.html");
         var myNicEditor = new nicEditor({
             iconsPath: '../nicEdit/nicEditorIcons.gif', 
             fullPanel : true, 
             onSave : function(content, id, instance) {
                 $.ajax({
                     type: "POST",
-            		url: testurl,
+            		url: updateurl,
             		data: content,
             		dataType: "html",
             		success: function(msg){
                 		var srchtml = jQuery(html);
             			if(parseInt(msg)!=0)
             			{
-            				$('#elm1').html(msg);
+            				$('#editortext').html(msg);
             				
             			}
             		}
@@ -30,19 +30,18 @@
             } 
         });
         myNicEditor.setPanel('toolbar');
-        myNicEditor.addInstance('elm1');
-        myNicEditor.instanceById('elm1').selected(0,0); // no selected instance in the neginning
-        var srcurl = document.URL.replace("word.html", "test.html");
+        myNicEditor.addInstance('editortext');
+        myNicEditor.instanceById('editortext').selected(0,0); // no selected instance in the neginning
         $.ajax({
     		type: "GET",
-    		url: srcurl,
+    		url: updateurl,
     		dataType: "html",
     		success: function(msg){
         		// console.log(msg);
     			if(parseInt(msg)!=0)
     			{
-    				$('#elm1').html(msg);
-    				$('#editortitle').text($('#elm1 title').text());
+    				$('#editortext').html(msg);
+    				$('#editortitle').text($('#editortext title').text());
     				
     				
     			}
@@ -57,7 +56,7 @@
 <body style="width: 100%; margin: 4; padding: 0; padding-top: 30px;" >
 <div id="toolbar" style="position: fixed; top: 0; left: 0; width: 100%;" >
 </div>
-<div id="elm1" >
+<div id="editortext" >
 </div>
 </body>
 </html>
