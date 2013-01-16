@@ -13,10 +13,12 @@
             iconsPath: '../nicEdit/nicEditorIcons.gif', 
             fullPanel : true, 
             onSave : function(content, id, instance) {
+                var editortext = "<html>\n<head><title>"+$('#editortitle').text()+"</title></head>\n<body>"+content+"</body>\n</html>";
+                console.log(editortext);
                 $.ajax({
                     type: "POST",
             		url: updateurl,
-            		data: content,
+            		data: editortext,
             		dataType: "html",
             		success: function(msg){
                 		var srchtml = jQuery(html);
@@ -33,15 +35,17 @@
         myNicEditor.addInstance('editortext');
         myNicEditor.instanceById('editortext').selected(0,0); // no selected instance in the neginning
         $.ajax({
+            
     		type: "GET",
     		url: updateurl,
     		dataType: "html",
     		success: function(msg){
         		// console.log(msg);
-    			if(parseInt(msg)!=0)
+        		if(parseInt(msg)!=0)
     			{
-    				$('#editortext').html(msg);
+    			    $('#editortext').html(msg);
     				$('#editortitle').text($('#editortext title').text());
+    				$('#editortext title').remove();
     				
     				
     			}
