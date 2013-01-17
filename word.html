@@ -5,12 +5,12 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <!-- nicEdit -->
 <script src="../jquery/jquery-1.8.3.js" type="text/javascript"></script>
-<script src="../nicEdit/nicEdit.js" type="text/javascript"></script>
+<script src="../htmleditor/nicEdit.js" type="text/javascript"></script>
 <script type="text/javascript">
      bkLib.onDomLoaded(function() {
         var updateurl = document.URL.replace("word.html", "update.html");
         var myNicEditor = new nicEditor({
-            iconsPath: '../nicEdit/nicEditorIcons.gif', 
+            iconsPath: '../htmleditor/nicEditorIcons.gif', 
             fullPanel : true, 
             onSave : function(content, id, instance) {
                 var editortext = "<html>\n<head><title>"+$('#editortitle').text()+"</title></head>\n<body>"+content+"</body>\n</html>";
