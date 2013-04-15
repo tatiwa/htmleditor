@@ -1,6 +1,7 @@
 var http = require('http');
 var fs = require('fs');
 var path = require('path');
+var htmlbeautify = require('js-beautify').html;
 
 http.createServer(function (request, response) {
  
@@ -27,11 +28,12 @@ http.createServer(function (request, response) {
                 body +=data;
             });
             request.on('end',function(){
-                console.log('update.html POST');    
+                console.log('update.html POST');
+                var htmltext = htmlbeautify(body);  
 
-                fs.writeFileSync(targetFile, body, "utf8");
+                fs.writeFileSync(targetFile, htmltext, "utf8");
                 response.writeHead(200, 'Content-Type: text/html' );
-                response.end(body, "utf8");
+                response.end(htmltext, "utf8");
                 
         	});
         } else if(request.method=='GET') { // Page load
