@@ -18,7 +18,7 @@ http.createServer(function (request, response) {
             request.on('end',function(){
                 console.log('word.html GET');    
                 response.writeHead(200, 'Content-Type: text/html' );
-                response.end(fs.readFileSync("htmleditor/word.html", "utf8"), "utf8");
+                response.end(fs.readFileSync("./word.html", "utf8"), "utf8");
             });
             request.resume();
         }
@@ -107,6 +107,6 @@ http.createServer(function (request, response) {
         } 
 	}
      
-}).listen(8126, "0.0.0.0");
+}).listen(8126, "localhost");
  
 console.log('Server running at http://localhost:8126/');

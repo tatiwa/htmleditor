@@ -9,7 +9,10 @@ and the local apps that do that are gone or fading out.
 Why not just use some client side javascript, and host the page locally?
 
 Prerequisite:
- You need node.js installed.
+  1. node.js
+    http://nodejs.org/
+  2. js-beautify
+    https://npmjs.org/package/js-beautify
 
 Usage:
   1. Run the script word.js on node.
@@ -19,7 +22,6 @@ Usage:
   3. Edit file in the browser, click save to update the file.
 
 ToDo:
-  - Should clean up the HTML as its getting saved on server.
   - No good way to create new file, or browse for local files (may be OK)
 
 Note:
